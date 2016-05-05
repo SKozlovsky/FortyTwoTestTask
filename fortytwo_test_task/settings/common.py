@@ -1,3 +1,4 @@
+# flake8: noqa
 """
 Django settings for fortytwo_test_task project.
 
@@ -41,7 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'south',
     'apps.hello',
 )
 
