@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block body_id %}mainpage_id{% endblock %}
+{% block body_class %}mainpage_class{% endblock %}
+
+{% block left %}
+<div class="cell persone persone_main">
+	<p>{{object.first_name|title}}</p>
+	<p>{{object.last_name|title}}</p>
+	<p>{{object.birth_date|date:"Y-m-d"}}</p>
+</div>
+<div class="cell contacts">
+	<h3>Contacts</h3>
+	<p><b>Jabber:</b>{{object.con_jabbber}}</p>
+	<p><b>Email:</b>{{object.con_email}}</p>
+	<p><b>Skype:</b>{{object.con_skype}}</p>
+</div>
+{% endblock %}
+
+
+{% block right %}
+<div class="cell bio">
+	<h3>Bio</h3>
+	<div class="multiline">{{object.bio}}</div>
+</div>
+{% if object.con_other %}
+<div class="cell ad_contacts">
+	<h3>Other contacts</h3>
+	<div class="multiline">{{object.con_other}}</div>
+</div>
+{% endif %}
+{% endblock %}

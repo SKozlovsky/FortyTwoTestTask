@@ -1,9 +1,10 @@
 {% load staticfiles %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>{% block title %}{% endblock title %}Site Name</title>
+        <title>{{title}}</title>
 
         <meta http-equiv="X-UA-Compatible" content="chrome=IE7" />
 
@@ -13,10 +14,30 @@
 
         <link rel="stylesheet" href="{% static 'css/screen.css' %}" media="screen, projection"/>
 
+
         {% block extra_head %}{% endblock extra_head %}
 
     </head>
     <body id="{% block body_id %}{% endblock %}" class="{% block body_class %}{% endblock %}">
-        {% block content %}{% endblock content %}
+        <h1>42 Coffee Cups Test Assignment</h1>
+
+        {% block content %}
+
+            {% if not object %}
+                <div class="not_found">
+                    <h3>The information you are looking for could not be found. Please try again later</h3>
+                </div>
+            {% endif %}
+
+            {% if object %}
+                <div class="table bigtable">
+                <div class = "row">{% block left %}{% endblock left %}</div>
+                <div class = "row">{% block right %}{% endblock right %}</div>
+                </div>
+            {% endif %}
+
+        {% endblock content %}
+        {% block extra_content %}{% endblock extra_content %}
+
     </body>
 </html>

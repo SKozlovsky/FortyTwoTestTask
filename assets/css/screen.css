@@ -1,1 +1,58 @@
- 
+h1 {
+	font-size: 130%;
+	margin-left: 5%;
+	width: 70%;
+}
+
+h3 {
+	color:green;
+}
+
+.persone_main {
+	font-weight: bold;
+	font-size: 110%;
+}
+
+
+.bigtable {
+	margin-left: 5%;
+	width: 70%;
+}
+
+.table {
+	display: table;
+}
+
+.row {
+	display: table-row;
+}
+
+.cell {
+	display: table-cell;
+	width: 45%;
+}
+
+.cell:last-child {
+	margin-left: 10%;
+}
+
+.multiline {
+	width:90%;
+	white-space:pre-line;
+}
+
+#separateline {
+	margin-left: 5%;
+	margin-top: 3%;
+	width: 90%;
+	height: 2px;
+	background-color:black;
+}
+
+.requests {
+margin-left: 5%;
+}
+
+.not_found {
+margin-left: 5%;
+}
