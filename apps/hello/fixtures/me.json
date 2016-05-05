@@ -1,0 +1,14 @@
+[
+    {"pk": 1, 
+    "model": "hello.person", 
+    "fields": 
+        {"bio": "Place of birth : Kiev of Ukraine.\r\nEducation: National Technical University of Ukraine\r\n\u201cKyiv Polytechnic Institute\u201d,\r\nFaculty of Instrument Design and Engineering,\r\nDepartment of Instruments of Fine Mechanics.\r\nMaster's degree.\r\n\r\nMarital status: Married, has a child.\r\n\r\nHobbies:\r\n    -bike ride\r\n    -camping\r\n    -computers", 
+        "first_name": "Sergii", 
+        "last_name": "Kozlovskyi", 
+        "con_email": "skokopok@gmail.com", 
+        "con_skype": "sk_okopok", 
+        "con_jabbber": "s_kozlovsky@khavr.com", 
+        "birth_date": "1981-11-24", 
+        "con_other": "Facebook: https://www.facebook.com/sergey.kzlovsky"}
+     }
+]
