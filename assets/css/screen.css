@@ -57,3 +57,89 @@ h3 {
 .not_found {
 margin-left: 5%;
 }
+
+#edit {
+	margin-top: 5px;
+}
+
+.button {
+	margin-left: 5%;
+}
+
+.auth {
+    height: 120px;
+    width: 100%;
+    margin-left: 90%;
+    position: fixed;
+}
+
+textarea {
+	text-align: left;
+	padding-right: 5px;
+}
+
+#ajax_responses {
+    height: 150px;
+    padding-top: 1px;
+    margin-top: -1px;
+}
+
+#pb {
+	display: none;
+}
+
+.arrows
+{
+  background-image: url("/static/images/arrow.png");
+  width: 66px;
+  height: 66px;
+  margin: 20px auto;
+-webkit-animation: rotation 1s infinite linear;
+-moz-animation: rotation 1s infinite linear;
+-o-animation: rotation 1s infinite linear;
+-ms-animation: rotation 1s infinite linear;
+animation: rotation 1s infinite linear;
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform-origin: 50% 50%;
+    -o-transform-origin: 50% 50%;
+    -keyframes-origin: rotation center;
+	transform-origin: 50% 50%;
+
+}
+
+@-webkit-keyframes rotation {
+0% { -webkit-transform: rotate(0deg);}
+100% { -webkit-transform: rotate(360deg);}
+}
+@-moz-keyframes rotation {
+0% { -moz-transform: rotate(0deg); }
+100% { -moz-transform: rotate(360deg);}
+}
+@-o-keyframes rotation {
+0% { -o-transform: rotate(0deg);}
+100% { -o-transform: rotate(360deg);}
+}
+@-ms-keyframes rotation {
+0% { -ms-transform: rotate(0deg);}
+100% { -ms-transform: rotate(360deg);}
+}
+@keyframes rotation {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg);}
+}
+
+.center {
+	text-align: center;
+	font-size: 110%;
+}
+
+.errorlist {
+	text-align: center;
+	color: red;
+}
+
+
+.edit {
+    margin-top: 10px;
+	margin-left: 20%;
+}

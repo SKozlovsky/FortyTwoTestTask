@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block body_id %}editpage_id{% endblock %}
+{% block body_class %}edit_class{% endblock %}
+
+{% block extra_head %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="static/js/edit_page.js"></script>
+{% endblock extra_head %}
+
+{% block auth %}
+    <div class = "auth">
+        {% if username %}
+            <a href="/logout">{{username}} | logout</a>
+        {% else %}
+            <a href="/login">login</a>
+        {% endif %}
+    </div>
+{% endblock auth %}
+
+
+{% block content %}
+
+    <body id="editpage_id" class="edit_class">
+    <form id="edit" method="post" action="" enctype="multipart/form-data">
+        <div class="table bigtable">
+            <div class = "row">
+                <div class="table persone cell" id="edit_persone">
+                    <div class="ef_row">
+                        <div class="ef_cell"><label for="id_first_name">First Name:</label></div>
+                        <div class="ef_cell "><input id="id_first_name" maxlength="30" name="first_name" type="text" value="Sergii" /></div>
+                    </div>
+                    <div class="ef_row">
+                        <div class="ef_cell"><label for="id_last_name">Last Name:</label></div>
+                        <div class="ef_cell"><input id="id_last_name" maxlength="30" name="last_name" type="text" value="Kozlovskyi" /></div>
+                    </div>
+                    <div class="ef_row">
+                        <div class="ef_cell"><label for="id_birth_date">Date of Birth:</label></div>
+                        <div class="ef_cell"><input id="id_birth_date" name="birth_date" type="text" value="1981-11-24" /></div>
+                    </div>
+                </div>
+                <div class="contacts cell table">
+
+                    <div class="ef_row">
+                        <div class="ef_cell"><label for="id_con_email">Email:</label></div>
+                        <div class="ef_cell "><input id="id_con_email" maxlength="79" name="con_email" type="email" value="skokopok@gmail.com" /></div>
+                    </div>
+                    <div class="ef_row">
+                        <div class="ef_cell"><label for="id_con_jabbber">Jabber:</label></div>
+                        <div class="ef_cell "><input id="id_con_jabbber" maxlength="79" name="con_jabbber" type="email" value="s_kozlovsky@khavr.com" /></div>
+                    </div>
+                    <div class="ef_row">
+                        <div class="ef_cell"><label for="id_con_skype">Skype:</label></div>
+                        <div class="ef_cell "><input id="id_con_skype" maxlength="79" name="con_skype" type="text" value="sk_okopok" /></div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class = "row">
+                <div class="foto cell">
+                    <p>Currently: <a href="/static/uploads/photo/foto_1.png">photo/foto_1.png</a> <input id="foto-clear_id" name="foto-clear" type="checkbox" /> <label for="foto-clear_id">Clear</label><br />Change: <input id="id_foto" name="foto" type="file" /></p>
+
+                    <img src="/static/uploads/photo/foto_1.png" width="240">
+
+                </div>
+                <div class="cell">
+                    <div class="bio">
+                        <div><label for="id_bio">Bio:</label></div>
+                        <div><textarea class="multiline" cols="40" id="id_bio" name="bio" rows="10">
+                            Place of birth : Kiev of Ukraine.
+                            Education: National Technical University of Ukraine “Kyiv Polytechnic Institute”,
+                            Faculty of Instrument Design and Engineering,
+                            Department of Instruments of Fine Mechanics.
+                            Master&#39;s degree.
+                            Marital status: Married, has a child.
+                                Hobbies:
+                                -bike ride
+                                -camping
+                                -computers</textarea></div>
+                    </div>
+                    <div class="ad_contacts">
+                        <div><label for="id_con_other">Other Contacts:</label></div>
+                        <div><textarea cols="40" id="id_con_other" name="con_other" rows="10" class="multiline">
+                            Facebook: https://www.facebook.com/sergey.kzlovsky</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <input class="button" type="submit" value="Update" />
+    </form>
+
+    <div id="ajax_responses">
+        <div class="arrows" id="pb"></div>
+        <div id="ajax_errors">
+        </div>
+    </div>
+
+
+{% endblock content %}
+
+{% block extra_content %}
+<div id="separateline"></div>
+    <div class="requests">
+        <a href="/requests">Last 10 requests</a>
+    </div>
+{% endblock extra_content %}
