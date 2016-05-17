@@ -14,6 +14,16 @@ function pb_show(){
 
 $(document).ready(function ($) {
 
+    $("#id_birth_date").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "yy-mm-dd",
+        showButtonPanel: true,
+        yearRange: "-65:-14",
+        firstDay: 1,
+        showAnim: 'slideDown',
+    });
+
     $('#edit').submit(function(e){
         $("#resp_ajax").hide();
         e.preventDefault();
