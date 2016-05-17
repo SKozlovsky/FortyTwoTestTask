@@ -30,7 +30,28 @@ $(document).ready(function ($) {
         var formData = new FormData(this);
 
         pb_show();
-        pb_hide();
+        $.ajax({
+            type: "POST",
+            processData: false,
+            contentType: false,
+            url: "/edit",
+            data:  formData,
+            success: function (result){
+                pb_hide();
+                console.log(result);
+                if (result['succses']) {
+                    $("#photo").prop('src', result["photo"]);
+                    $("#resp_ajax").html("<h2>All data have saved</h2>");
+                } else {
+                    console.log("EROORS: "+result['errors']);
+
+                    $("#resp_ajax").html(result['errors']);
+
+                };
+
+            },
+        });
+
     });
 });
 
