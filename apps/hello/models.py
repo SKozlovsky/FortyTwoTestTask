@@ -16,7 +16,7 @@ def photo_resize(image_path, sizeMustBe=200):
 
 def get_path(instance, filename):
     """
-    Return full path for image contained in Person.photo
+    Return full path for image contained in Person.
     Photo should be named photo_%id%.%extensions%
     If file with that name exist, it will delete
     """
