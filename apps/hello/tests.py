@@ -26,32 +26,45 @@ class ViewDataTests(TestCase):
     def test_404(self):
         """ Test for page, wheh model-object isn't exist in DB"""
         self.assertFalse(Person.objects.all())
-        content = self.client.get('/').content
+        content = self.client.get(reverse('mainpage')).content
         self.assertTrue('<div class="not_found">' in content)
 
     def test_verifying_rendering_template(self):
         """Test to check of using of the correct template """
         PersonFB.create()
-        response = self.client.get('/')
-        self.assertTrue(response.template_name[0] == 'hello/mainpage.html')
+        response = self.client.get(reverse('mainpage'))
+        self.assertTemplateUsed(response, 'hello/mainpage.html')
 
     def test_availability_model_data_on_page(self):
         """Test to check the content on web-page"""
         atr = None
-        TestPers = PersonFB.create()
-        response = self.client.get('/')
+        test_pers = PersonFB.create()
+        response = self.client.get(reverse('mainpage'))
         for field_name in Person._meta.get_all_field_names():
-            if field_name != 'id':
-                if field_name == 'birth_date':
-                    date = TestPers.__getattribute__(field_name)
-                    atr = date.strftime("%Y-%m-%d")
-                elif field_name == 'first_name' or field_name == 'last_name':
-                    name_ = TestPers.__getattribute__(field_name)
-                    atr = name_.title()
-                else:
-                    atr = TestPers.__getattribute__(field_name)
+            if field_name == 'id':
+                continue
+            if field_name == 'birth_date':
+                date = test_pers.__getattribute__(field_name)
+                atr = date.strftime("%Y-%m-%d")
+            elif field_name == 'first_name' or field_name == 'last_name':
+                name_ = test_pers.__getattribute__(field_name)
+                atr = name_.title()
+            elif field_name == 'photo':
+                continue
+            else:
+                atr = test_pers.__getattribute__(field_name)
 
             self.assertIn(atr, response.content)
+
+    def test_context_data(self):
+        """Tes to check of using correct context-data"""
+        test_pers = PersonFB.create()
+        context = self.client.get(reverse('mainpage')).context_data
+        self.assertEqual(context['title'], 'Hello')
+        self.assertEqual(context['object'], test_pers)
+
+
+class ModelDataTests(TestCase):
 
     def test_first_DB_records(self):
         """Test to check what object is selected by view from DB with several records.
@@ -60,7 +73,7 @@ class ViewDataTests(TestCase):
             PersonFB.create(first_name="Person%i" % j)
         self.assertTrue(len(Person.objects.all()) == 5)
         p = Person.objects.get(id=1)
-        context = self.client.get('/').context_data
+        context = self.client.get(reverse('mainpage')).context_data
         self.assertEqual(context['object'], p)
 
     def test_min_DB_records(self):
@@ -73,20 +86,11 @@ class ViewDataTests(TestCase):
         Person.objects.get(id=5).delete()
         self.assertTrue(len(Person.objects.all()) == 4)
         p = Person.objects.get(id=3)
-        context = self.client.get('/').context_data
+        context = self.client.get(reverse('mainpage')).context_data
         self.assertEqual(context['object'], p)
 
-    def test_context_data(self):
-        """Tes to check of using correct context-data"""
-        TestPers = PersonFB.create()
-        context = self.client.get('/').context_data
-        self.assertEqual(context['title'], 'Hello')
-        self.assertEqual(context['object'], TestPers)
 
-    def test_separ(self):
-        """ Test to check separate line existing """
-        self.assertInHTML('<div id="separateline"></div>',
-                          self.client.get('/').content)
+class RequestViewTests(TestCase):
 
     def test_10_requests_content(self):
         """Test to check existing of 10 'GET' or 'POST' request on page """
@@ -97,14 +101,20 @@ class ViewDataTests(TestCase):
             self.client.get('/admin')
             self.client.post('/login/',
                              {'username': 'john', 'password': 'smith'})
-        content = self.client.get('/requests').content
+        content = self.client.get(reverse('requests')).content
         req_count = content.count('GET')+content.count('POST')
         self.assertTrue(req_count == 10)
+
+    def test_correct_title_name(self):
+        """Test to check correct title name  """
+        PersonFB.create()
+        content = self.client.get(reverse('requests')).content
+        self.assertInHTML("<title>Requests</title>", content)
 
     def test_requests_existing(self):
         """Test to check existing requests list in context """
         PersonFB.create()
-        context = self.client.get('/requests').context_data
+        context = self.client.get(reverse('requests')).context_data
         self.assertIsNotNone(context['requests_list'])
 
     def test_10_requests_context(self):
@@ -112,11 +122,11 @@ class ViewDataTests(TestCase):
         PersonFB.create()
         for i in range(5):
             self.client.get('/somepage%i' % i)
-            self.client.get('/')
+            self.client.get(reverse('mainpage'))
             self.client.get('/admin')
             self.client.post('/login/',
                              {'username': 'john', 'password': 'smith'})
-        context = self.client.get('/requests').context_data
+        context = self.client.get(reverse('requests')).context_data
         self.assertTrue(len(context['requests_list']) == 10)
 
     def test_last_10_requests(self):
@@ -125,10 +135,10 @@ class ViewDataTests(TestCase):
         for i in range(21):
             self.client.get('/ololo_%i' % i)
         self.client.post('/login/', {'username': 'john', 'password': 'smith'})
-        self.client.get('/requests')
-        context = self.client.get('/requests').context_data
+        self.client.get(reverse('requests'))
+        context = self.client.get(reverse('requests')).context_data
         requests_list = context['requests_list']
-        self.assertEqual(requests_list[0].r_path, '/requests')
+        self.assertEqual(requests_list[0].r_path, reverse('requests'))
         self.assertEqual(requests_list[1].r_path, '/login/')
         for j in range(1, 8):
             self.assertEqual(requests_list[1+j].r_path, '/ololo_%i' % (21-j))
@@ -173,16 +183,13 @@ class MiddlewareTests(TestCase):
         self.assertEqual(len(readed_requests), 17)
         self.assertEqual(len(unreaded_requests), 0)
 
-    def test_correct_title_name(self):
-        """Test to check correct title name """
-        PersonFB.create()
-        content = self.client.get(reverse('requests')).content
-        self.assertInHTML("<title>Requests</title>", content)
+
+class AjaxTests(TestCase):
 
     def test_json_response(self):
         """ test to check response existing after AJAX-request """
-        self.client.get('/')
-        response = self.client.get('/req_json',
+        self.client.get(reverse('mainpage'))
+        response = self.client.get(reverse('ajax_requests'),
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         self.assertIn("Content-Type: application/json", response.__str__())
@@ -190,8 +197,8 @@ class MiddlewareTests(TestCase):
     def test_correct_title_name_json(self):
         """ Test to check correct title name in JSON-response"""
         PersonFB.create()
-        self.client.get('/requests')
-        c = self.client.get('/req_json',
+        self.client.get(reverse('requests'))
+        c = self.client.get(reverse('ajax_requests'),
                             HTTP_X_REQUESTED_WITH='XMLHttpRequest').content
         title = re.match(r'.+title": "(.*Requests)",.+', c).groups()[0]
         self.assertEqual(title, '(0)Requests')
@@ -201,8 +208,8 @@ class MiddlewareTests(TestCase):
                                 HTTP_X_REQUESTED_WITH='XMLHttpRequest').content
             title = re.match(r'.+title": "(.*Requests)",.+', c).groups()[0]
             self.assertEqual(title, '(%i)Requests' % (i+1))
-        self.client.get('/requests')
-        c = self.client.get('/req_json',
+        self.client.get(reverse('requests'))
+        c = self.client.get(reverse('ajax_requests'),
                             HTTP_X_REQUESTED_WITH='XMLHttpRequest').content
         title = re.match(r'.+title": "(.*Requests)",.+', c).groups()[0]
         self.assertEqual(title, '(0)Requests')
