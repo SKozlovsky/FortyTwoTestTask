@@ -1,10 +1,14 @@
-from apps.hello.models import Person, RequestCollect
-import factory
-from faker import Factory
 import re
-from django.test import TestCase
-from django.core.urlresolvers import reverse
+from os import path, remove
+
+import factory
+from PIL import Image
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+from django.test import TestCase
+from faker import Factory
+
+from apps.hello.models import Person, RequestCollect, photo_resize
 
 Faker = Factory.create()
 
@@ -49,6 +53,8 @@ class ViewDataTests(TestCase):
                 elif field_name == 'first_name' or field_name == 'last_name':
                     name_ = TestPers.__getattribute__(field_name)
                     atr = name_.title()
+                elif field_name == 'photo':
+                    pass
                 else:
                     atr = TestPers.__getattribute__(field_name)
 
@@ -228,14 +234,17 @@ class EditFormTests(TestCase):
         self.assertTrue(response.template_name[0] == 'hello/edit.html')
 
     def test_not_loged_user(self):
-        """Test to check impossibility of editing Data by non-authenticated user"""
+        """
+        Test to check impossibility of editing Data
+        by non-authenticated user
+        """
         content = self.client.get(reverse('edit')).content
         # s - strings for verification
         s = "<h2>You must be logged in to access this page</h2>"
         self.assertInHTML(s, content)
 
         s = """<div id="loged">"""
-        self.assertNotContains(s, content)
+        self.assertNotIn(s, content)
 
     def test_logged_user(self):
         """Test to check possibility of editing Data by authenticated user"""
@@ -255,7 +264,8 @@ class EditFormTests(TestCase):
     def test_ajax_post_login_successful(self):
         """Test user login by AJAX with correct credentials"""
         response = self.client.post(reverse('login'),
-                                    {'username': 'testadmin', 'password': 'testadmin'},
+                                    {'username': 'testadmin',
+                                     'password': 'testadmin'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertIn(""""user": "testadmin""", response.content)
         self.assertIn("""succses": true""", response.content)
@@ -266,7 +276,8 @@ class EditFormTests(TestCase):
         self.assertTrue(persone.first_name != 'John')
         self.assertTrue(persone.last_name != 'Doe')
 
-        data = {}
+        data = {u'birth_date_2': u'1978', u'birth_date_1': u'11',
+                u'birth_date_0': u'24'}
         data['first_name'] = 'John'
         data['last_name'] = 'Doe'
         data['birth_date'] = persone.birth_date
@@ -276,7 +287,9 @@ class EditFormTests(TestCase):
         data['bio'] = Faker.paragraph()
         data['con_other'] = Faker.paragraph()
 
-        response = self.client.post(reverse('edit'), data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.post(
+            reverse('edit'), data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertIn("""succses": true""", response.content)
 
     def test_saving_edited_data(self):
@@ -285,7 +298,8 @@ class EditFormTests(TestCase):
         self.assertTrue(persone.first_name != 'John')
         self.assertTrue(persone.last_name != 'Doe')
 
-        data = {}
+        data = {u'birth_date_2': u'1978', u'birth_date_1': u'11',
+                u'birth_date_0': u'24'}
         data['first_name'] = 'John'
         data['last_name'] = 'Doe'
         data['birth_date'] = persone.birth_date
@@ -295,9 +309,37 @@ class EditFormTests(TestCase):
         data['bio'] = Faker.paragraph()
         data['con_other'] = Faker.paragraph()
 
-        self.client.post(reverse('edit'), data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.client.post(
+            reverse('edit'), data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
         persone = Person.objects.get(id=1)
         self.assertTrue(persone.first_name == 'John')
         self.assertTrue(persone.last_name == 'Doe')
 
+
+class PhotoTests(TestCase):
+
+    def setUp(self):
+        img = Image.new('RGB', (800, 800))
+        img.save('test_imagefile.png')
+
+    def test_phto(self):
+        """Test of photo's resize method"""
+        self.assertTrue(path.exists('test_imagefile.png'))
+        img = Image.open('test_imagefile.png')
+        (width, height) = img.size
+        self.assertTrue((width, height) == (800, 800))
+
+        photo_resize('test_imagefile.png', 200)
+        img = Image.open('test_imagefile.png')
+        (width, height) = img.size
+        self.assertTrue((width, height) == (200, 200))
+
+        photo_resize('test_imagefile.png', 400)
+        img = Image.open('test_imagefile.png')
+        (width, height) = img.size
+        self.assertTrue((width, height) == (400, 400))
+
+        img.close()
+        remove('test_imagefile.png')
