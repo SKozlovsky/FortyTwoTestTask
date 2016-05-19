@@ -1,5 +1,36 @@
 # -*- encoding: utf-8 -*-
 from django.db import models
+import os
+from PIL import Image
+from django.conf import settings
+
+
+def photo_resize(image_path, sizeMustBe=200):
+
+    img = Image.open(image_path)
+    (width, height) = img.size
+    newsize = (width * sizeMustBe / height, sizeMustBe)
+    img = img.resize(newsize, Image.ANTIALIAS)
+    img.save(image_path)
+
+
+def get_path(instance, filename):
+    """
+    Return full path for image contained in Person.photo
+    Photo should be named photo_%id%.%extensions%
+    If file with that name exist, it will delete
+    """
+    if not instance.id:
+        return os.path.join('photo', filename)
+    else:
+        f_extension = filename.split('.')[1]
+        newname = "photo_%i.%s" % (instance.id, f_extension)
+        _path = os.path.normpath(
+            os.path.join(settings.MEDIA_ROOT, 'photo'))
+        full_path = os.path.join(_path, newname)
+        if os.path.exists(full_path):
+            os.remove(full_path)
+        return os.path.join('photo', newname)
 
 
 class Person(models.Model):
@@ -12,9 +43,16 @@ class Person(models.Model):
     bio = models.TextField("Bio", max_length=400)
     con_other = models.TextField("Other Contacts",
                                  max_length=400, blank=True)
+    photo = models.ImageField("Photo", upload_to=get_path,
+                              blank=True, null=True)
 
     def __str__(self):
         return "%i  %s   %s" % (self.pk, self.first_name, self.last_name)
+
+    def save(self, *args, **kwargs):
+        super(Person, self).save(*args, **kwargs)
+        if self.photo:
+            photo_resize(image_path=self.photo.path)
 
 
 class RequestCollect(models.Model):
