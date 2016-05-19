@@ -13,9 +13,9 @@
 </div>
 <div class="cell contacts">
 	<h3>Contacts</h3>
-	<p><b>Jabber:</b>{{object.con_jabbber}}</p>
-	<p><b>Email:</b>{{object.con_email}}</p>
-	<p><b>Skype:</b>{{object.con_skype}}</p>
+	<p><b>Jabber:</b> {{object.con_jabbber}}</p>
+	<p><b>Email:</b> {{object.con_email}}</p>
+	<p><b>Skype:</b> {{object.con_skype}}</p>
 </div>
 {% endblock %}
 
@@ -23,19 +23,12 @@
 {% block right %}
 <div class="cell bio">
 	<h3>Bio</h3>
-	<div class="multiline">{{object.bio}}</div>
+	<div>{{object.bio|linebreaksbr}}</div>
 </div>
-{% if object.con_other %}
+
 <div class="cell ad_contacts">
 	<h3>Other contacts</h3>
-	<div class="multiline">{{object.con_other}}</div>
+	<div>{{object.con_other|linebreaksbr}}</div>
 </div>
-{% endif %}
 {% endblock %}
 
-{% block extra_content %}
-<div id="separateline"></div>
-    <div class="requests">
-        <a href="/requests">Last 10 requests</a>
-    </div>
-{% endblock extra_content %}
