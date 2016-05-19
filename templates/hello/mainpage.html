@@ -11,9 +11,9 @@
 </div>
 <div class="cell contacts">
 	<h3>Contacts</h3>
-	<p><b>Jabber:</b>{{object.con_jabbber}}</p>
-	<p><b>Email:</b>{{object.con_email}}</p>
-	<p><b>Skype:</b>{{object.con_skype}}</p>
+	<p><b>Jabber:</b> {{object.con_jabbber}}</p>
+	<p><b>Email:</b> {{object.con_email}}</p>
+	<p><b>Skype:</b> {{object.con_skype}}</p>
 </div>
 {% endblock %}
 
@@ -21,7 +21,7 @@
 {% block right %}
 <div class="cell bio">
 	<h3>Bio</h3>
-	<div class="multiline">{{object.bio}}</div>
+	<div>{{object.bio|linebreaksbr}}</div>
 </div>
 {% if object.con_other %}
 <div class="cell ad_contacts">
