@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load staticfiles %}
 
 {% block body_id %}mainpage_id{% endblock %}
 {% block body_class %}mainpage_class{% endblock %}
@@ -21,21 +20,35 @@
 
 
 {% block right %}
-<div class="cell bio">
-	<h3>Bio</h3>
-	<div class="multiline">{{object.bio}}</div>
+<div class="cell">
+	{% if object.con_other %}
+	<h4>Photo:</h4>
+	<img src="{{ STATIC_URL }}uploads/{{object.photo}}">
+	{% endif %}
 </div>
-{% if object.con_other %}
-<div class="cell ad_contacts">
-	<h3>Other contacts</h3>
-	<div class="multiline">{{object.con_other}}</div>
+<div class="cell">
+	<div class="bio">
+		<h3>Bio</h3>
+		<div class="multiline">{{object.bio}}</div>
+	</div>
+	{% if object.con_other %}
+	<div class="ad_contacts">
+		<h3>Other contacts</h3>
+		<div class="multiline">{{object.con_other}}</div>
+	</div>
 </div>
 {% endif %}
 {% endblock %}
 
 {% block extra_content %}
+	<div class="edit" id="edit_button">
+		<button type="submit" onclick="location.href='/edit'">Edit Person</button>
+	</div>
+
 <div id="separateline"></div>
     <div class="requests">
         <a href="/requests">Last 10 requests</a>
     </div>
+
 {% endblock extra_content %}
+

@@ -10,6 +10,9 @@ class AdmPersone(admin.ModelAdmin):
                   {'fields': ['con_email', 'con_jabbber', 'con_skype']}),
                  ('Other Contacts',
                   {'fields': ['con_other'], 'classes': ['collapse']}),
-                 ('Bio', {'fields': ['bio']})]
+                 ('Bio', {'fields': ['bio']}),
+                 ('Photo', {'fields': ['photo']}),
+
+                 ]
 
 admin.site.register(Person, AdmPersone)

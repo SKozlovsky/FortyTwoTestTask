@@ -19,9 +19,22 @@
 
     </head>
     <body id="{% block body_id %}{% endblock %}" class="{% block body_class %}{% endblock %}">
-        <h1>42 Coffee Cups Test Assignment</h1>
+    <div id="content">
+
+        {% block auth %}
+            <div class = "auth">
+                {% if not user.is_authenticated %}
+                    <a href="/login">login</a>
+
+                {% else %}
+                    <a href="/logout">{{ user.get_username }} | logout</a>
+                {% endif %}
+            </div>
+        {% endblock auth %}
 
         {% block content %}
+            <h1>42 Coffee Cups Test Assignment</h1>
+
 
             {% if not object %}
                 <div class="not_found">
@@ -35,10 +48,16 @@
                 <div class = "row">{% block right %}{% endblock right %}</div>
                 </div>
             {% endif %}
-
         {% endblock content %}
+    </div>
 
-        {% block extra_content %}{% endblock extra_content %}
+{% block extra_content %}
+
+<div id="separateline"></div>
+    <div class="requests">
+        <a href="/requests">Last 10 requests</a>
+    </div>
+{% endblock extra_content %}
 
 
     </body>

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block extra_head %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="static/js/edit_page.js"></script>
+    <script src="static/js/jquery-ui.js"></script>
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.theme.css' %}" media="screen, projection"/>
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}" media="screen, projection"/>
+{% endblock extra_head %}
+
+
+{% block content %}
+
+{% if not user.is_authenticated %}
+<div id="not_loged" class="center">
+    <h2>You must be logged in to access this page</h2>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ login_form.as_p }}
+        <div class="errorlist" id="login_erors"></div>
+        <input type="submit" value="Submit" />
+    </form>
+</div>
+{% endif %}
+
+
+{% if user.is_authenticated %}
+    <h1>42 Coffee Cups Test Assignment</h1>
+<div id="loged">
+    <form id="edit" method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="table bigtable">
+            <div class = "row">
+                <div class="table persone cell" id="edit_persone">
+                    <div class="ef_row">
+                        <div class="ef_cell">{{ form.first_name.label_tag }}</div>
+                        <div class="ef_cell ">{{ form.first_name }}</div>
+                    </div>
+                    <div class="ef_row">
+                        <div class="ef_cell">{{ form.last_name.label_tag }}</div>
+                        <div class="ef_cell">{{ form.last_name }}</div>
+                    </div>
+                    <div class="ef_row">
+                        <div class="ef_cell">{{ form.birth_date.label_tag }}</div>
+                        <div class="ef_cell">{{ form.birth_date }}</div>
+                    </div>
+                </div>
+
+                <div class="contacts cell table">
+                    <div class="ef_row">
+                        <div class="ef_cell">{{ form.con_email.label_tag }}</div>
+                        <div class="ef_cell ">{{ form.con_email }}</div>
+                    </div>
+                    <div class="ef_row">
+                        <div class="ef_cell">{{ form.con_jabbber.label_tag }}</div>
+                        <div class="ef_cell ">{{ form.con_jabbber }}</div>
+                    </div>
+                    <div class="ef_row">
+                        <div class="ef_cell">{{ form.con_skype.label_tag }}</div>
+                        <div class="ef_cell ">{{ form.con_skype }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class = "row">
+                <div class="foto cell">
+                    <p>{{form.photo}}</p>
+                    {% if object.photo %}
+                    <img id="photo" src="{{ form.photo.value.url }}">
+                    {% else %}
+                    <img id="photo" src="">
+                    {% endif %}
+                </div>
+                <div class="cell">
+                    <div class="bio">
+                        <div>{{ form.bio.label_tag }}</div>
+                        <div>{{ form.bio }}</div>
+                    </div>
+                    <div class="ad_contacts">
+                        <div>{{ form.con_other.label_tag }}</div>
+                        <div>{{ form.con_other }}</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <input class="button" type="submit" value="Update" />
+    </form>
+
+    <div id="ajax_responses">
+        <div class="arrows" id="pb"></div>
+        <div class="center" id="resp_ajax"></div>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}

@@ -2,6 +2,7 @@ function pb_hide(){
     setTimeout(function () {
         $("#pb").hide();
         $("#resp_ajax").show();
+        $('#edit :input').attr('disabled', false);
     }, 2000);
 };
 
@@ -13,7 +14,6 @@ function pb_show(){
 
 
 $(document).ready(function ($) {
-
     $("#id_birth_date").datepicker({
         changeMonth: true,
         changeYear: true,
@@ -24,11 +24,37 @@ $(document).ready(function ($) {
         showAnim: 'slideDown',
     });
 
+    $('#not_loged form').submit(function (e) {
+        var login_data = new FormData(this);
+        e.preventDefault();
+        $('#not_loged form :input').attr('disabled', true);
+        $.ajax({
+            type: "POST",
+            processData: false,
+            contentType: false,
+            url: "/ajax_login",
+            data: login_data,
+            success: function (result){
+                console.log('Succses: '+result['succses'])
+                if (!result['succses']) {
+                    $('#login_erors').html(result['error'])
+                } else {
+                    $.get("/edit", function(response){
+                        console.log(response);
+                        $("body").html(response);
+
+                    });
+                };
+            },
+        });
+        $('#not_loged form :input').attr('disabled', false);
+    });
+
     $('#edit').submit(function(e){
         $("#resp_ajax").hide();
         e.preventDefault();
         var formData = new FormData(this);
-
+        $('#edit :input').attr('disabled', true);
         pb_show();
         $.ajax({
             type: "POST",
@@ -51,7 +77,6 @@ $(document).ready(function ($) {
 
             },
         });
-
     });
 });
 

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block body_id %}editpage_id{% endblock %}
+{% block body_class %}edit_class{% endblock %}
+
+
+{% block auth %}{% endblock auth %}
+{% block content %}
+
+<div id="login" class="center">
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="hidden" name="next" value="/">
+        <input type="submit" value="Submit" />
+    </form>
+</div>
+{% if error %}
+    <div class="errorlist">{{ error }}</div>
+{% endif %}
+{% endblock content %}
+
+
+{% block separ %}{% endblock separ %}
+{% block request_list %}{% endblock request_list %}
