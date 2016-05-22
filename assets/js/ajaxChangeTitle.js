@@ -9,7 +9,12 @@ var repeatAjax;
 function sendAjax() {
      $.getJSON('req_json', function(data) {
           setTitle(data['new_title']);
-          $('#req_list').html(data['new_requests_list']);
+          var req_list=data['new_requests_list']
+          var req_list_html='';
+          for (var i=0; i<req_list.length; i++) {
+              req_list_html+='<p>'+req_list[i]+'</p>'
+          };
+          $('#req_list').html(req_list_html);
      })
      .always(function() {
         if (!active) {
