@@ -39,12 +39,9 @@ def req_json(request):
     new_title = "(%i)Requests" % (len(undread_requests))
     response_data = {}
     rlist = RequestCollect.objects.order_by('-r_time')[:10]
-    html_rlist = ""
-    for req in rlist:
-        html_rlist += "<p>%s</p>" % req
-
+    ajax_rlist = [r.__str__() for r in rlist]
     response_data['new_title'] = new_title
-    response_data['new_requests_list'] = html_rlist
+    response_data['new_requests_list'] = ajax_rlist
     response = HttpResponse(json.dumps(response_data),
                             content_type="application/json")
     return response
